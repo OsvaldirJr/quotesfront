@@ -10,30 +10,26 @@
     </div>
 
     <mat-grid-list cols="4" rowHeight="400px">
-        <mat-grid-tile [colspan]="1"
-                       [rowspan]="1">
-                       <mat-card appearance="outlined">
-                        <mat-card-content>Simple card</mat-card-content>
-                      </mat-card>
-          </mat-grid-tile>
-          <mat-grid-tile [colspan]="1"
-                       [rowspan]="1">
-                       <mat-card appearance="outlined">
-                        <mat-card-content>Simple card</mat-card-content>
-                      </mat-card> 
-          </mat-grid-tile>
-          <mat-grid-tile [colspan]="1"
-                       [rowspan]="1">
-                       <mat-card appearance="outlined">
-                        <mat-card-content>Simple card</mat-card-content>
-                      </mat-card>  
-          </mat-grid-tile>
-          <mat-grid-tile [colspan]="1"
-                       [rowspan]="1">
-                       <mat-card appearance="outlined">
-                        <mat-card-content>Simple card</mat-card-content>
-                      </mat-card> 
-          </mat-grid-tile>
+        @for(quotes of quotesArray; track quotes.name){
+            <mat-grid-tile [colspan]="1"
+            [rowspan]="1">
+                <mat-card appearance="outlined">
+                    <mat-card-content>
+                        imagem
+                        <div class="d-flex">
+                            nome
+                            {{quotes.name}}
+                        </div>
+                        PREÇO DO ATIVO
+                        
+                        {{quotes.value[quotes.value.length-1].value}}
+                </mat-card-content>
+                </mat-card>
+            </mat-grid-tile>
+        }
+        
+         
+          
     </mat-grid-list>
 </div>
 
