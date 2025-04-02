@@ -1,1 +1,40 @@
 <app-navbar></app-navbar>
+<div class="body">
+    <div class="header">
+        <h1>Explore o mercado</h1>  
+        <div class="filters">
+            <span class="filter">Ordenar: </span>
+            <button mat-flat-button class="active">Em Alta</button>
+            <button mat-flat-button disabled>Em Baixa</button>
+        </div>
+    </div>
+
+    <mat-grid-list cols="4" rowHeight="400px">
+        <mat-grid-tile [colspan]="1"
+                       [rowspan]="1">
+                       <mat-card appearance="outlined">
+                        <mat-card-content>Simple card</mat-card-content>
+                      </mat-card>
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="1"
+                       [rowspan]="1">
+                       <mat-card appearance="outlined">
+                        <mat-card-content>Simple card</mat-card-content>
+                      </mat-card> 
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="1"
+                       [rowspan]="1">
+                       <mat-card appearance="outlined">
+                        <mat-card-content>Simple card</mat-card-content>
+                      </mat-card>  
+          </mat-grid-tile>
+          <mat-grid-tile [colspan]="1"
+                       [rowspan]="1">
+                       <mat-card appearance="outlined">
+                        <mat-card-content>Simple card</mat-card-content>
+                      </mat-card> 
+          </mat-grid-tile>
+    </mat-grid-list>
+</div>
+
+
