@@ -1,49 +1,39 @@
-:host {
-  display: block;
-}
-.body{
-  padding-left: 100px;
-  padding-right: 100px;
-}
-h1{
-  font-size:50px;
-}
+// :host {
+//   display: block;
+// }
+// .body{
+//   padding-left: 100px;
+//   padding-right: 100px;
+// }
+// h1{
+//   font-size:50px;
+// }
 
-.filter{
-  color:#c9cdd0;
-}
+// .filter{
+//   color:#c9cdd0;
+// }
 
-button{
-  border-radius: 18px;
-  color: #aaafb4;
-  width: 120px;
-  &.active{
-    background-color: #00add2;
-    color: #c8edf5;
-  }
-  
-}
+// mat-card {
+//   width: 100%;
+//   min-width: 300px;
+//   height: 350px;
+//   margin-right: 50px;
+//   margin-bottom: 50px;
+// }
 
-mat-card {
-  width: 100%;
-  min-width: 300px;
-  height: 400px;
-  margin-right: 50px;
-}
+// .header{
+//   display: flex;
+//   text-align: center;
+//   justify-content: space-between;
+// }
 
-.header{
-  display: flex;
-  text-align: center;
-  justify-content: space-between;
-}
+// .filters{
+//   display: flex;
+//   align-items: center;
+//   gap: 20px 20px;
+//   margin-right: 50px;
+// }
 
-.filters{
-  display: flex;
-  align-items: center;
-  gap: 20px 20px;
-  margin-right: 50px;
-}
-
-.d-flex{
-  display: flex;
-}
+// .d-flex{
+//   display: flex;
+// }

@@ -19,10 +19,10 @@ export class DashboardComponent implements OnInit{
 
   ngOnInit(): void {
 
-    let webSocketConnection$ = this.webSocketService.connectSocket(this.URL);
-    webSocketConnection$.subscribe((status) =>
-      status ? this.messageListener() : 'erro na conexão'
-    );
+    // let webSocketConnection$ = this.webSocketService.connectSocket(this.URL);
+    // webSocketConnection$.subscribe((status) =>
+    //   status ? this.messageListener() : 'erro na conexão'
+    // );
   }
 
   sendMessage() {

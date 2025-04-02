@@ -7,17 +7,16 @@ import { NavbarComponent } from './dashboard/components/navbar/navbar.component'
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
+import { HeaderComponent } from './dashboard/components/header/header.component';
 @NgModule({
   declarations: [
     DashboardComponent,
-    NavbarComponent
+    NavbarComponent,
+    HeaderComponent
   ],
   imports: [
     CommonModule,
     MainRoutingModule,
-    MatGridListModule,
-    MatButtonModule,
-    MatCardModule
   ],
   providers: [
     provideClientHydration()

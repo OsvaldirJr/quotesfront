@@ -1,36 +1,13 @@
 <app-navbar></app-navbar>
-<div class="body">
-    <div class="header">
-        <h1>Explore o mercado</h1>  
-        <div class="filters">
-            <span class="filter">Ordenar: </span>
-            <button mat-flat-button class="active">Em Alta</button>
-            <button mat-flat-button disabled>Em Baixa</button>
-        </div>
+<app-header></app-header>
+
+
+<div class="max-w-sm  border border-gray-200 rounded-lg shadow-sm ms-10 mt-10">
+    <div class="p-5 h-[300px]">
+        <p class="mb-3">Imagem</p>
+        <div class="flex justify-between mb-3">Nome <span>key</span></div>
+
+        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Valor</p>
+        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Chart</p>
     </div>
-
-    <mat-grid-list cols="4" rowHeight="400px">
-        @for(quotes of quotesArray; track quotes.name){
-            <mat-grid-tile [colspan]="1"
-            [rowspan]="1">
-                <mat-card appearance="outlined">
-                    <mat-card-content>
-                        imagem
-                        <div class="d-flex">
-                            nome
-                            {{quotes.name}}
-                        </div>
-                        PREÇO DO ATIVO
-                        
-                        {{quotes.value[quotes.value.length-1].value}}
-                </mat-card-content>
-                </mat-card>
-            </mat-grid-tile>
-        }
-        
-         
-          
-    </mat-grid-list>
 </div>
-
-
