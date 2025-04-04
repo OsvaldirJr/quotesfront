@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { QuotesHubService } from '../../../../core/services/quotes.hub.service';
-import { debounceTime, map } from 'rxjs';
-import { Quotes, QuotesValues } from '../../../../core/models/quotes.model';
+import { QuotesHubService } from '../../../core/services/quotes.hub.service';
+import { map } from 'rxjs';
+import { BrapiQuotes, Quotes, QuotesValues, Stokes } from '../../../core/models';
+import { environment } from '../../../../environments/environment';
+import { BrapiHttpService } from '../../../core/services/brapi.http.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,50 +11,90 @@ import { Quotes, QuotesValues } from '../../../../core/models/quotes.model';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit{ 
-  dataList: any = [];
-  quotesArray: Quotes[] = [];
-  URL = 'http://localhost:8080/quotes';
+  protected dataList: any = [];
+  protected quotesArray: Quotes[] = [];
+  protected quotesList: Quotes[] = [];
+  protected URL = environment.webSocketApi;
+  private _tickers?: Stokes[];
+  private _pageLength = 8;
+  public selectedFilterButton?: 'rising' | 'falling';
 
   constructor(
-    public webSocketService: QuotesHubService 
+    public webSocketService: QuotesHubService,
+    public brapiHttpService: BrapiHttpService
   ) {}
 
   ngOnInit(): void {
-
-    // let webSocketConnection$ = this.webSocketService.connectSocket(this.URL);
-    // webSocketConnection$.subscribe((status) =>
-    //   status ? this.messageListener() : 'erro na conexão'
-    // );
+    this._setTickersData()
+    let webSocketConnection$ = this.webSocketService.connectSocket(this.URL);
+    webSocketConnection$.subscribe((status) =>
+      status ? this._webSocketMessageListener() : 'erro na conexão'
+    );
   }
 
-  sendMessage() {
+  private _sendWebSocketMessage() {
     this.webSocketService.sendMessage({ op: 'subscribe', args: 'trade' });
   }
 
-  messageListener() {
-    this.sendMessage();
+  private _webSocketMessageListener() {
+    this._sendWebSocketMessage();
     this.webSocketService
       .receiveMessages()
-      .pipe(map((message: any) => this.setData(message)))
+      .pipe(map((message: any) => this._setQuotesData(message)))
       .subscribe();
   }
 
-  setData(data: any) {
+  private _setQuotesData(data: any) {
     let name = Object.keys(data)[0];
-    let time = data.timestamp;
-    let value = Object.values(data)[0] as number
-    let quote = new Quotes({name, time, value})
-    if(!this.quotesArray.find(x=>x.name == name)){
-      this.quotesArray.push(quote)
+    let results = this._tickers?.find(x=>x.stock == name);
+    if(results){
+      let time = data.timestamp;
+      let value = Object.values(data)[0] as number
+      value = value ? value : results.close!
+      let quote = new Quotes({key: name,name: results?.name!,logo: results?.logo!, time, value})
+      this._verifyValuesExistsAndSetNewValues(name, quote, time, value,results);
     }
-    else{
-      this.quotesArray.forEach(x=>{
-        if(x.name == name){
-          x.value.push(new QuotesValues({time, value}))
+  }
+
+  private _verifyValuesExistsAndSetNewValues(name: string, quote: Quotes, time: any, value: number, result: Stokes) {
+    if (!this.quotesArray.find(x => x.name == name)) {
+      quote.isRising = result.change! > 0 
+      this.quotesArray.push(quote);
+      if(this.selectedFilterButton == 'rising') {
+        this.quotesList= this.quotesArray.filter(x => x.isRising).slice(0,this._pageLength)
+      } 
+      else if(this.selectedFilterButton == 'falling'){ 
+        this.quotesList=  this.quotesArray.filter(x => !x.isRising).slice(0,this._pageLength)
+      }
+      else{
+        this.quotesList= this.quotesArray.slice(0,this._pageLength)
+      }
+    }
+    else {
+      this.quotesArray.forEach(x => {
+        x.isRising =  result.close! < value;
+        if (x.name == name) {
+          x.value.push(new QuotesValues({ time, value }));
         }
-      })
-      
+      });
     }
-    console.log(this.quotesArray)
+  }
+
+  private _setTickersData() {
+    this.brapiHttpService.getQuotes().subscribe({
+      next:(tickers: BrapiQuotes)=>{
+        this._tickers = tickers.stocks;
+      }
+    })
+  }
+  public paginate(){
+    this._pageLength += 8; 
+    this.quotesList= this.quotesArray.slice(0,this._pageLength)
+  }
+
+  public changeFilter(selectedButton: 'rising' | 'falling'){
+
+    this.selectedFilterButton = selectedButton;
+    // this.quotesList = selectedButton == 'rising' ? this.quotesArray.filter(x => x.isRising == false).slice(0,this._pageLength) : this.quotesArray.filter(x => !x.isRising ==true).slice(0,this._pageLength)
   }
 }

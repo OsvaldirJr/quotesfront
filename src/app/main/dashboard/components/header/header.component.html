@@ -2,12 +2,28 @@
     <h1 class="text-3xl font-bold ">
         Explore o mercado
     </h1>
-    <div class="grid grid-cols-3 gap-1">
-        <span>Ordenar:</span>
-        <button class="bg-(--button-primary) hover:bg-blue-700 text-(--button-text-primary) font-bold py-2 px-4 rounded-full">
+    <div >
+        <span class="text-(--button-text-secondary) me-2">Ordenar:</span>
+        <button (click)="change('rising')"
+                [ngClass]="
+                {
+                    'bg-(--button-primary)': selectedFilter == 'rising' ,
+                    'text-(--button-text-primary)':selectedFilter == 'rising' ,
+                    'bg-(--button-secondary)' :selectedFilter == 'falling' || !selectedFilter,
+                    'text-(--button-text-secondary)':selectedFilter == 'falling' || !selectedFilter
+                }"
+                class=" hover:bg-blue-700  font-bold py-2 px-4 rounded-full me-4">
             Em alta
         </button>
-        <button class="bg-(--button-secondary) text-(--button-text-secondary)  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+        <button (click)="change('falling')"
+        [ngClass]="
+                {
+                    'bg-(--button-primary)': selectedFilter == 'falling',
+                    'text-(--button-text-primary)':selectedFilter == 'falling',
+                    'bg-(--button-secondary)' :selectedFilter == 'rising' || !selectedFilter,
+                    'text-(--button-text-secondary)':selectedFilter == 'rising' || !selectedFilter
+                }"
+                class="  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
             Em Baixa
         </button>
     </div>

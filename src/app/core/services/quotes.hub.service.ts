@@ -13,6 +13,7 @@ export class QuotesHubService {
   connectSocket(webSocketUrl: string): Observable<any> {
     try {
       this.webSocketSubject = webSocket(webSocketUrl);
+      this.webSocketSubject.next({ op: 'subscribe', args: 'trade' })
     } catch {
       return of(false);
     }
