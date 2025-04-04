@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -8,16 +9,14 @@ import { webSocket } from 'rxjs/webSocket';
 export class QuotesHubService {
   webSocketSubject = new Subject<any>();
 
-  constructor() {}
+  constructor() {
+    this.connectSocket(environment.webSocketApi)
+  }
 
-  connectSocket(webSocketUrl: string): Observable<any> {
-    try {
-      this.webSocketSubject = webSocket(webSocketUrl);
+  connectSocket(webSocketUrl: string): void {
+    const socket = webSocket<any>(webSocketUrl);
+      this.webSocketSubject = socket;
       this.webSocketSubject.next({ op: 'subscribe', args: 'trade' })
-    } catch {
-      return of(false);
-    }
-    return of(true);
   }
 
   sendMessage(body: Object) {

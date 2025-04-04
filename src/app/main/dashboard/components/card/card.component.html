@@ -1,0 +1,23 @@
+<div class="max-w-sm  border border-gray-200 rounded-lg shadow-sm ms-10 mt-10 pb-[-30px]">
+    <div class="p-5 h-[150px]">
+        <div class="mb-3"><img [src]='quote?.logo'/></div>
+        <div class="flex justify-between mb-3 text-(--button-text-secondary)">{{quote?.name}} <span>{{quote?.key}}</span></div>
+        <p class="mb-3 font-normal ">PREÇO DO ATIVO</p>
+        <p class="text-3xl flex" [ngClass]="{'text-red-400': !quote?.isRising, 'text-green-400': quote?.isRising}">{{quote!.value[quote!.value.length - 1].value | currency: 'BRL' }} 
+            <span class="mt-1">
+                @if(quote?.isRising){
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
+                    </svg>
+                }
+                @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3" />
+                      </svg>
+                }
+
+            </span>
+           </p>
+    </div>
+    <app-chart [data]="quote?.value"/>
+</div>

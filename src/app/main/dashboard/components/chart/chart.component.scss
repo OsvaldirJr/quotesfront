@@ -1,0 +1,10 @@
+:host {
+  display: block;
+}
+#chart{
+  position: relative;
+  top: 30px;
+  //WARNING: apexchart has his own margings this code was made to remove it 
+  margin-left: -15px;
+  margin-right: -20px;
+}

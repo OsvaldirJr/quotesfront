@@ -7,23 +7,23 @@
         <button (click)="change('rising')"
                 [ngClass]="
                 {
-                    'bg-(--button-primary)': selectedFilter == 'rising' ,
-                    'text-(--button-text-primary)':selectedFilter == 'rising' ,
+                    'bg-cyan-600': selectedFilter == 'rising' ,
+                    'text-cyan-100':selectedFilter == 'rising' ,
                     'bg-(--button-secondary)' :selectedFilter == 'falling' || !selectedFilter,
                     'text-(--button-text-secondary)':selectedFilter == 'falling' || !selectedFilter
                 }"
-                class=" hover:bg-blue-700  font-bold py-2 px-4 rounded-full me-4">
+                class="hover:bg-cyan-600 hover:text-cyan-100 font-bold py-2 px-4 rounded-full me-4">
             Em alta
         </button>
         <button (click)="change('falling')"
         [ngClass]="
                 {
-                    'bg-(--button-primary)': selectedFilter == 'falling',
-                    'text-(--button-text-primary)':selectedFilter == 'falling',
+                    'bg-cyan-600': selectedFilter == 'falling',
+                    'text-cyan-100':selectedFilter == 'falling',
                     'bg-(--button-secondary)' :selectedFilter == 'rising' || !selectedFilter,
                     'text-(--button-text-secondary)':selectedFilter == 'rising' || !selectedFilter
                 }"
-                class="  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                class="  hover:bg-cyan-600 hover:text-cyan-100 font-bold py-2 px-4 rounded-full">
             Em Baixa
         </button>
     </div>
