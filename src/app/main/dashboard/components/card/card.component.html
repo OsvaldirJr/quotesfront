@@ -3,7 +3,7 @@
         <div class="mb-3"><img [src]='quote?.logo'/></div>
         <div class="flex justify-between mb-3 text-(--button-text-secondary)">{{quote?.name}} <span>{{quote?.key}}</span></div>
         <p class="mb-3 font-normal ">PREÇO DO ATIVO</p>
-        <p class="text-3xl flex" [ngClass]="{'text-red-400': !quote?.isRising, 'text-green-400': quote?.isRising}">{{quote!.value[quote!.value.length - 1].value | currency: 'BRL' }} 
+        <p class="text-3xl flex" [@textColorChange]="quote?.isRising">{{quote!.value[quote!.value.length - 1].value | currency: 'BRL' }} 
             <span class="mt-1">
                 @if(quote?.isRising){
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">

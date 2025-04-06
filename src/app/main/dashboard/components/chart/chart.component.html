@@ -1,6 +1,6 @@
 @if(data && chartOptions){
 <div id="chart">
-    <apx-chart [series]="chartOptions!.series!" 
+    <apx-chart [series]="getData()" 
                [chart]="chartOptions!.chart!" 
                [xaxis]="chartOptions!.xaxis!"
                [stroke]="chartOptions!.stroke!" 

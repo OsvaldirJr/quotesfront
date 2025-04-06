@@ -8,6 +8,7 @@ import { HeaderComponent } from './dashboard/components/header/header.component'
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DashboardChartComponent } from './dashboard/components/chart/chart.component';
 import { CardComponent } from './dashboard/components/card/card.component';
+
 @NgModule({
   declarations: [
     DashboardComponent,

@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { QuotesHubService } from '@core/services/quotes.hub.service';
-import { map } from 'rxjs';
-import { BrapiQuotes, Quotes, QuotesValues, Stokes } from '@core/models';
-import { environment } from 'src/environments/environment';
+import { Subject, debounceTime, map, takeUntil } from 'rxjs';
+import { BrapiQuotes, Quotes, QuotesValues, Stock } from '@core/models';
 import { BrapiHttpService } from '@core/services/brapi.http.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
+  standalone: false
 })
 export class DashboardComponent implements OnInit{ 
-  protected dataList: any = [];
-  protected quotesArray: Quotes[] = [];
-  protected quotesList: Quotes[] = [];
-  private _tickers?: Stokes[];
+  public quotesArray: Quotes[] = [];
+  public quotesList: Quotes[] = [];
+  private _tickers?: Stock[];
   private _pageLength = 8;
   public selectedFilterButton?: 'rising' | 'falling';
+  private _destroy$: Subject<any> = new Subject<any>();
 
   constructor(
     public webSocketService: QuotesHubService,
@@ -28,37 +28,43 @@ export class DashboardComponent implements OnInit{
     this._webSocketMessageListener();
   }
 
+  ngOnDestroy(): void {
+    this._destroy$.next(true);
+    this._destroy$.complete();
+  }
+
   private _webSocketMessageListener() {
     this.webSocketService
       .receiveMessages()
-      .pipe(map((message: any) => this._setQuotesData(message)))
+      .pipe(takeUntil(this._destroy$) ,debounceTime(10), map((message: any) => this._setQuotesData(message)))
       .subscribe();
   }
 
   private _setQuotesData(data: any) {
     const name = Object.keys(data)[0];
-    let tickers = this._tickers?.find(x=>x.stock == name);
+    const tickers = this._tickers?.find(x=>x.stock == name);
     if(tickers){
-      let time = data.timestamp;
-      let value = Object.values(data)[0] as number
-      let quote = new Quotes({key: name,name: tickers?.name!,logo: tickers?.logo!, time, value})
+      const time = data.timestamp;
+      const value = Object.values(data)[0] as number
+      const quote = new Quotes({key: name,name: tickers?.name!,logo: tickers?.logo!, time, value, isRising: true})
       this._verifyValuesExistsAndSetNewValues(name, quote, time, value,tickers);
     }
   }
 
-  private _verifyValuesExistsAndSetNewValues(name: string, quote: Quotes, time: any, value: number, result: Stokes) {
+  private _verifyValuesExistsAndSetNewValues(name: string, quote: Quotes, time: any, value: number, result: Stock) {
     if (!this.quotesArray.find(x => x.key == name)) {
       quote.isRising = result.change! > 0 
       this.quotesArray.push(quote);
       this._extractAndPaginateList();
       return;
     }
-    
+
     this.quotesArray.forEach(x => {
       x.isRising =  result.close! < value;
-      if (x.name == name) {
-        x.value.push(new QuotesValues({ time, value: value-1 }));
+      if (x.key == name) {
+        x.value.push(new QuotesValues({ time, value: value }));
       }
+      
     });
 
     this._extractAndPaginateList();

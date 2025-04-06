@@ -1,8 +1,8 @@
 export class BrapiQuotes{
-    public stocks?: Stokes[];
+    public stocks?: Stock[];
 }
 
-export class Stokes{
+export class Stock{
     stock?: string
     name?: string
     shortName?: string
