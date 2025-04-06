@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { QuotesHubService } from '@core/services/quotes.hub.service';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { BrapiQuotes, Quotes, QuotesValues, Stock } from '@core/models';
-import { BrapiHttpService } from '@core/services/brapi.http.service';
+import { BrapiHttpService, QuotesHubService } from '@core/services';
 
 @Component({
   selector: 'app-dashboard',

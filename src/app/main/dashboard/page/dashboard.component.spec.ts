@@ -1,14 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
-import { QuotesHubService } from '@core/services/quotes.hub.service';
-import { BrapiHttpService } from '@core/services/brapi.http.service';
 import { of, Subject } from 'rxjs';
 import { Quotes, Stock } from '@core/models';
-import { CardComponent } from '../components/card/card.component';
-import { DashboardChartComponent } from '../components/chart/chart.component';
-import { HeaderComponent } from '../components/header/header.component';
-import { NavbarComponent } from '../components/navbar/navbar.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { BrapiHttpService, QuotesHubService } from '@app/core/services';
+import { NavbarComponent } from '@app/main/dashboard/components/navbar/navbar.component';
+import { HeaderComponent } from '@app/main/dashboard/components/header/header.component';
+import { CardComponent } from '@app/main/dashboard/components/card/card.component';
+import { DashboardChartComponent } from '@app/main/dashboard/components/chart/chart.component';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;

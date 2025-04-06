@@ -24,7 +24,6 @@
     "@angular/platform-server": "^19.2.5",
     "@angular/router": "^19.2.5",
     "@angular/ssr": "^19.2.6",
-    "@datorama/akita": "^8.0.1",
     "@tailwindcss/postcss": "^4.1.1",
     "express": "^4.18.2",
     "ng-apexcharts": "^1.15.0",

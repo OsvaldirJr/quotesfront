@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { BrapiHttpService } from './brapi.http.service';
+import { BrapiHttpService } from './';
 import { environment } from '../../../environments/environment';
 
 describe('BrapiHttpService', () => {
