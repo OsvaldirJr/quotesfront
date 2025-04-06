@@ -15,11 +15,10 @@ export class DashboardChartComponent implements AfterViewInit {
   @Input() data?: QuotesValues[];
   
   getData(): ApexAxisChartSeries{
-    return [{data: this.data?.map(x=>x.value) as any[]}]
+    return this.data ? [{data: this.data?.map(x=>x.value) as any[]}] : [{data:[]}]
   }  
 
   ngAfterViewInit(): void {
-    console.log()
     this.chartOptions = {
       chart: {
         type: "area",
