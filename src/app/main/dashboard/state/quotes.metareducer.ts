@@ -5,7 +5,9 @@ export function storageMetaReducer(
   reducer: ActionReducer<{ quotes: QuotesState }, Action<string>>
 ): ActionReducer<{ quotes: QuotesState }, Action<string>> {
   return function (state, action) {
-    if (action.type === '[Quotes] Load Quotes State') {
+    console.log(action.type)
+    if (action.type === '@ngrx/store/init') {
+        console.log('devia ter carregado')
       const storedState = localStorage.getItem('quotesState');
       const parsedState = storedState ? JSON.parse(storedState) : null;
       if (parsedState && parsedState.quotes) {

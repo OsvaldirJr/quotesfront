@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { BrapiQuotes, Stock } from '@core/models';
 import { BrapiHttpService, QuotesHubService } from '@core/services';
 import { setQuotesData, setQuotesList, setPageLength, setFilterButton } from '../state/quotes.actions';
@@ -59,9 +59,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         value: [{ time, value }],
         isRising: tickers?.change! > 0,
       });
-
-      this.store.dispatch(setQuotesData({ quote }));
-      this._extractAndPaginateList();
+  
+      this.store.select(selectQuotesArray).pipe(take(1)).subscribe(quotesArray => {
+        const existingQuote = quotesArray.find(x => x.key === name);
+        console.log(quotesArray)
+        
+        if (!existingQuote || JSON.stringify(existingQuote) !== JSON.stringify(quote)) {
+          this.store.dispatch(setQuotesData({ quote }));
+          this._extractAndPaginateList();
+        }
+      });
     }
   }
 

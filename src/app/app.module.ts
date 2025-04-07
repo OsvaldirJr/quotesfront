@@ -9,6 +9,7 @@ import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { StoreModule } from '@ngrx/store';
 import { quotesReducer } from './main/dashboard/state/quotes.reducer';
+import { metaReducers } from './main/dashboard/state/quotes.metareducer';
 
 registerLocaleData(localePt, 'pt');
 @NgModule({
@@ -18,7 +19,7 @@ registerLocaleData(localePt, 'pt');
   imports: [
     BrowserModule,
     AppRoutingModule,
-    StoreModule.forRoot({ quotes: quotesReducer }),
+    StoreModule.forRoot({ quotes: quotesReducer }, { metaReducers }),
   ],
   providers: [
     provideClientHydration(),

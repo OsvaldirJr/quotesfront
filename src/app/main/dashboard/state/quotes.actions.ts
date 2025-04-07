@@ -1,4 +1,3 @@
-// quotes.actions.ts
 import { Quotes } from './quotes.model';
 import { createAction, props } from '@ngrx/store';
 

@@ -1,4 +1,3 @@
-// quotes.model.ts
 export interface QuotesValues {
     time: any;
     value: number;

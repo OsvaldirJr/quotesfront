@@ -1,4 +1,3 @@
-// quotes.reducer.ts
 import { createReducer, on } from '@ngrx/store';
 import { initialState, QuotesState } from './quotes.model';
 import { setQuotesData, setQuotesList, setPageLength, setFilterButton } from './quotes.actions';
