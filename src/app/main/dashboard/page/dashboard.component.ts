@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit{
   private _webSocketMessageListener() {
     this.webSocketService
       .receiveMessages()
-      .pipe(takeUntil(this._destroy$) ,debounceTime(10), map((message: any) => this._setQuotesData(message)))
+      .pipe(takeUntil(this._destroy$),map((message: any) => this._setQuotesData(message)))
       .subscribe();
   }
 
@@ -59,8 +59,8 @@ export class DashboardComponent implements OnInit{
     }
 
     this.quotesArray.forEach(x => {
-      x.isRising =  result.close! < value;
       if (x.key == name) {
+        x.isRising =  result.close! < value;
         x.value.push(new QuotesValues({ time, value: value }));
       }
       

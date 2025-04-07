@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
 import { QuotesValues } from '@app/core/models';
 import { ChartOptions } from '@core/types';
 import { ChartComponent } from "ng-apexcharts";
@@ -14,6 +14,7 @@ export class DashboardChartComponent implements AfterViewInit {
   public chartOptions?: Partial<ChartOptions>;
   @Input() data?: QuotesValues[];
   
+  constructor(private cdr: ChangeDetectorRef){}
   getData(): ApexAxisChartSeries{
     return this.data ? [{data: this.data?.map(x=>x.value) as any[]}] : [{data:[]}]
   }  
@@ -76,5 +77,6 @@ export class DashboardChartComponent implements AfterViewInit {
         colors: ['#34bdda']
       }
     };
+    this.cdr.detectChanges();
   }
 }
