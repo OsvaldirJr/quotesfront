@@ -62,7 +62,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   
       this.store.select(selectQuotesArray).pipe(take(1)).subscribe(quotesArray => {
         const existingQuote = quotesArray.find(x => x.key === name);
-        console.log(quotesArray)
         
         if (!existingQuote || JSON.stringify(existingQuote) !== JSON.stringify(quote)) {
           this.store.dispatch(setQuotesData({ quote }));

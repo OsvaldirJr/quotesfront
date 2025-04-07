@@ -1,6 +1,5 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Component, Input } from '@angular/core';
-import { Quotes } from '@core/models';
 
 @Component({
     selector: 'app-card',
