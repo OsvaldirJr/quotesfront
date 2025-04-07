@@ -1,4 +1,4 @@
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject, debounceTime, take, takeUntil, debounce, interval, delay, throttle} from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
 import { environment } from 'src/environments/environment';
@@ -10,12 +10,13 @@ export class QuotesHubService implements OnDestroy {
   webSocketSubject = new Subject<any>();
   private _destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private zone: NgZone) {
+  constructor() {
     this.connectSocket(environment.webSocketApi)
   }
   ngOnDestroy(): void {
     this._destroy$.next(true);
-    this._destroy$.complete()
+    this._destroy$.complete();
+    this.disconnectSocket();
   }
 
   connectSocket(webSocketUrl: string): void {
@@ -24,6 +25,11 @@ export class QuotesHubService implements OnDestroy {
       openObserver: {
         next: () => {
           console.log('Connection ok');
+        }
+      },
+      closingObserver:{
+        next: () => {
+          console.log('Connection closed');
         }
       },
       deserializer: ({ data }) => data
