@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, Subject, debounceTime, take, takeUntil, debounce, interval, delay, throttle} from 'rxjs';
+import { Observable, Subject, takeUntil, interval, throttle} from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
 import { environment } from 'src/environments/environment';
 
@@ -13,6 +13,7 @@ export class QuotesHubService implements OnDestroy {
   constructor() {
     this.connectSocket(environment.webSocketApi)
   }
+
   ngOnDestroy(): void {
     this._destroy$.next(true);
     this._destroy$.complete();
