@@ -16,5 +16,5 @@ import { Quotes } from '@core/models';
     standalone: false
 })
 export class CardComponent { 
-  @Input() quote?: Quotes
+  @Input() quote?: any
 }

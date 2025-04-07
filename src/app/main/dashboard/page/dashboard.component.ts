@@ -1,29 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { Subject, debounceTime, map, takeUntil } from 'rxjs';
-import { BrapiQuotes, Quotes, QuotesValues, Stock } from '@core/models';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Subject, takeUntil } from 'rxjs';
+import { BrapiQuotes, Stock } from '@core/models';
 import { BrapiHttpService, QuotesHubService } from '@core/services';
+import { setQuotesData, setQuotesList, setPageLength, setFilterButton } from '../state/quotes.actions';
+import { selectQuotesArray, selectPageLength, selectFilterButton, selectQuotesList } from '../state/quotes.selectors';
+import { Quotes, QuotesState } from '../state/quotes.model';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
-  standalone: false
+  standalone: false,
 })
-export class DashboardComponent implements OnInit{ 
-  public quotesArray: Quotes[] = [];
-  public quotesList: Quotes[] = [];
+export class DashboardComponent implements OnInit, OnDestroy {
+  public quotesArray$ = this.store.select(selectQuotesArray);
+  public quotesList$ = this.store.select(selectQuotesList);
+  public pageLength$ = this.store.select(selectPageLength);
+  public selectedFilterButton$ = this.store.select(selectFilterButton);
+
   private _tickers?: Stock[];
-  private _pageLength = 8;
-  public selectedFilterButton?: 'rising' | 'falling';
   private _destroy$: Subject<any> = new Subject<any>();
 
   constructor(
     public webSocketService: QuotesHubService,
-    public brapiHttpService: BrapiHttpService
+    public brapiHttpService: BrapiHttpService,
+    private store: Store<{ quotes: QuotesState }>
   ) {}
 
   ngOnInit(): void {
-    this._setTickersData()
+    this._setTickersData();
     this._webSocketMessageListener();
   }
 
@@ -35,74 +41,65 @@ export class DashboardComponent implements OnInit{
   private _webSocketMessageListener() {
     this.webSocketService
       .receiveMessages()
-      .pipe(takeUntil(this._destroy$),map((message: any) => this._setQuotesData(message)))
-      .subscribe();
+      .pipe(takeUntil(this._destroy$))
+      .subscribe((message: any) => this._setQuotesData(message));
   }
 
   private _setQuotesData(data: any) {
     const name = Object.keys(data)[0];
-    const tickers = this._tickers?.find(x=>x.stock == name);
-    if(tickers){
+    const tickers = this._tickers?.find((x) => x.stock == name);
+    if (tickers) {
       const time = data.timestamp;
-      const value = Object.values(data)[0] as number
-      const quote = new Quotes({key: name,name: tickers?.name!,logo: tickers?.logo!, time, value, isRising: true})
-      this._verifyValuesExistsAndSetNewValues(name, quote, time, value,tickers);
-    }
-  }
+      const value = Object.values(data)[0] as number;
+      const quote = new Quotes({
+        key: name,
+        name: tickers?.name!,
+        logo: tickers?.logo!,
+        time,
+        value: [{ time, value }],
+        isRising: tickers?.change! > 0,
+      });
 
-  private _verifyValuesExistsAndSetNewValues(name: string, quote: Quotes, time: any, value: number, result: Stock) {
-    if (!this.quotesArray.find(x => x.key == name)) {
-      quote.isRising = result.change! > 0 
-      this.quotesArray.push(quote);
+      this.store.dispatch(setQuotesData({ quote }));
       this._extractAndPaginateList();
-      return;
     }
-
-    this.quotesArray.forEach(x => {
-      if (x.key == name) {
-        x.isRising =  result.close! < value;
-        x.value.push(new QuotesValues({ time, value: value }));
-      }
-      
-    });
-
-    this._extractAndPaginateList();
   }
 
   private _extractAndPaginateList() {
-    if (this.selectedFilterButton == 'rising') {
-      this.quotesList = this.quotesArray.filter(x => x.isRising).slice(0, this._pageLength);
-      return;
-    }
-
-    if (this.selectedFilterButton == 'falling') {
-      this.quotesList = this.quotesArray.filter(x => !x.isRising).slice(0, this._pageLength);
-      return;
-    }
-    
-    this.quotesList = this.quotesArray.slice(0, this._pageLength);
+    this.pageLength$.pipe(takeUntil(this._destroy$)).subscribe(pageLength => {
+      this.selectedFilterButton$.pipe(takeUntil(this._destroy$)).subscribe(selectedFilter => {
+        this.quotesArray$.pipe(takeUntil(this._destroy$)).subscribe(quotesArray => {
+          let filteredQuotes = quotesArray;
+          if (selectedFilter === 'rising') {
+            filteredQuotes = quotesArray.filter((x) => x.isRising);
+          } else if (selectedFilter === 'falling') {
+            filteredQuotes = quotesArray.filter((x) => !x.isRising);
+          }
+          this.store.dispatch(setQuotesList({ quotesList: filteredQuotes.slice(0, pageLength) }));
+        });
+      });
+    });
   }
 
   private _setTickersData() {
     this.brapiHttpService.getQuotes().subscribe({
-      next:(tickers: BrapiQuotes)=>{
+      next: (tickers: BrapiQuotes) => {
         this._tickers = tickers.stocks;
-      }
-    })
-  }
-  public paginate(){
-    this._pageLength += 8; 
-    this.quotesList= this.quotesArray.slice(0,this._pageLength)
+      },
+    });
   }
 
-  public changeFilter(selectedButton: 'rising' | 'falling'){
-    if( this.selectedFilterButton == selectedButton){
-      this.selectedFilterButton = undefined;
-      this.quotesList = this.quotesArray.slice(0,this._pageLength);
-      return;
-    }
+  public paginate() {
+    this.pageLength$.pipe(takeUntil(this._destroy$)).subscribe(pageLength => {
+      this.store.dispatch(setPageLength({ pageLength: pageLength + 8 }));
+    });
+  }
 
-    this.selectedFilterButton = selectedButton;
-    this.quotesList = selectedButton == 'rising' ? this.quotesArray.filter(x => x.isRising).slice(0,this._pageLength) : this.quotesArray.filter(x => !x.isRising).slice(0,this._pageLength)
+  public changeFilter(selectedButton: 'rising' | 'falling') {
+    this.selectedFilterButton$.pipe(takeUntil(this._destroy$)).subscribe(currentFilter => {
+      const newFilter = currentFilter === selectedButton ? undefined : selectedButton;
+      this.store.dispatch(setFilterButton({ filterButton: newFilter }));
+      this._extractAndPaginateList();
+    });
   }
 }

@@ -8,7 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class HeaderComponent { 
   @Output() changeFilter = new EventEmitter();
-  @Input() selectedFilter?: string;
+  @Input() selectedFilter?: any;
 
   change(filter: string){
     this.changeFilter.emit(filter)

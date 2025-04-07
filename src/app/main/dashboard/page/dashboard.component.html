@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
-<app-header (changeFilter)="changeFilter($event)" [selectedFilter]="selectedFilterButton"></app-header>
+<app-header (changeFilter)="changeFilter($event)" [selectedFilter]="selectedFilterButton$ | async"></app-header>
 <div class="grid 3xl:grid-cols-6 xl:grid-cols-4 lg:grid-cols-3 lg:gap-2 me-10 md:grid-cols-2 md:gap-2 sm:grid-cols-1 sm:gap-1">
-@for(quote of quotesList; track quote.name){
+@for(quote of quotesList$ | async; track quote.name){
     <app-card [quote]="quote"/>
 }
 </div>

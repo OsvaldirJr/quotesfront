@@ -7,6 +7,8 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withFetch } from '@angular/common
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { StoreModule } from '@ngrx/store';
+import { quotesReducer } from './main/dashboard/state/quotes.reducer';
 
 registerLocaleData(localePt, 'pt');
 @NgModule({
@@ -15,7 +17,8 @@ registerLocaleData(localePt, 'pt');
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot({ quotes: quotesReducer }),
   ],
   providers: [
     provideClientHydration(),
