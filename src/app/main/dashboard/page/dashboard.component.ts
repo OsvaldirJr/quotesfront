@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public webSocketService: QuotesHubService,
     public brapiHttpService: BrapiHttpService,
     private store: Store<{ quotes: QuotesState }>
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this._setTickersData();
@@ -59,10 +59,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         value: [{ time, value }],
         isRising: tickers?.change! > 0,
       });
-  
+
       this.store.select(selectQuotesArray).pipe(take(1)).subscribe(quotesArray => {
         const existingQuote = quotesArray.find(x => x.key === name);
-        
+
         if (!existingQuote || JSON.stringify(existingQuote) !== JSON.stringify(quote)) {
           this.store.dispatch(setQuotesData({ quote }));
           this._extractAndPaginateList();
